@@ -1,0 +1,11 @@
+napalm==3.3.1
+nornir==3.2.0
+PyYAML==6.0
+typer==0.4.0
+tabulate==0.8.9
+tqdm==4.62.3
+ttp==0.8.1
+hvac==0.11.2
+pandas==1.3.4
+openpyxl==3.0.9
+hvac==0.11.2

@@ -1,0 +1,12 @@
+# hosts.yaml
+---
+NAMEDEVICE:
+  hostname: 10.1.10.3
+  port: 22
+  username: example
+  password: example
+  platform: ios
+  groups:
+    - guatemala
+  data:
+    name: "cisco"

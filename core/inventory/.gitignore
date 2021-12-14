@@ -1,0 +1,7 @@
+# ignorar todo dentro de la carpeta
+*
+# excepto
+!.gitignore
+!defaults.yaml
+!groups.yaml
+!hosts.yaml

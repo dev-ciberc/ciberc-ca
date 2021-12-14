@@ -1,0 +1,49 @@
+[tool.poetry]
+name = "core"
+version = "0.1.0"
+description = "CiberC Code Automation - reports excel and json formats"
+authors = ["Rafael Garcia Sagastume <rafael.garcia@ciberc.com>"]
+license = "BSD 3-Clause License"
+
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development",
+    "Topic :: Terminals",
+    "Topic :: Utilities",
+    "Typing :: Typed",
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+napalm = "3.3.1"
+nornir = "3.2.0"
+PyYAML = "6.0"
+typer = "0.4.0"
+tabulate = "0.8.9"
+tqdm = "4.62.3"
+ttp = "0.8.1"
+hvac = "0.11.2"
+pandas = "1.3.4"
+openpyxl = "3.0.9"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+ciberc-ca = "core.main:main"
