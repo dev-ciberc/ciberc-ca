@@ -22,7 +22,7 @@ def alive(
     output: Optional[str] = None,
 ):
     """
-    alive for all device filter with groups
+    Alive for all device filter with groups
     """
 
     if path is None:

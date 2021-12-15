@@ -84,7 +84,7 @@ def interfaces(
     ),
 ):
     """
-    informacion de las interfaces de los dispositivos:
+    Device interface information
 
     Example:\n
         - python3 core/main.py interfaces --path=core/inventory/ --output=json > interfaces.json\n

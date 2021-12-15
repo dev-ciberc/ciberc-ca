@@ -11,7 +11,6 @@ try:
 except Exception:
     from c_nornir import DevopsNornir
 
-
 try:
     from .c_login import Login
 except Exception:
@@ -78,8 +77,16 @@ class Alive:
 
             device.close()
 
-        except Exception:
-            result = {}
+        except Exception as e:
+            try:
+                device.close()
+            except Exception:
+                pass
+
+            result = Result(
+                host=task.host,
+                result={"error": str(e)}
+            )
 
         self.update_pbar()
 

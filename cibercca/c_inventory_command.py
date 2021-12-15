@@ -16,7 +16,7 @@ def inventory(
     ),
 ):
     """
-    create files for inventory system
+    Create files for inventory system
     """
     if create:
         exists = os.path.exists("./inventory/")
