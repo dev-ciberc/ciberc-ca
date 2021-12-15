@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "core"
+name = "cibercca"
 version = "0.1.0"
 description = "CiberC Code Automation - reports excel and json formats"
 authors = ["Rafael Garcia Sagastume <rafael.garcia@ciberc.com>"]
@@ -46,4 +46,4 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-ciberc-ca = "core.main:main"
+ciberc-ca = "cibercca.main:main"
