@@ -5,10 +5,13 @@ CiberC Code Automation
 # Commands:
 
 ```
-  alive       alive for all device filter with groups
-  interfaces  informacion de las interfaces de los dispositivos:
-  inventory   create files for inventory system
-  login       Login on (CiberC Code Automations)
+Commands:
+  alive       Alive for all device filter with groups
+  interfaces  Device interface information
+  inventory   Create files for inventory system
+  login       Login on (CiberC Code Automations) [not required]
+  ping        report por vrf and ping results for inventory devices
+  ping-merge  Command to merge the source vrf listing files and...
 ```
 
 ### Login command:
