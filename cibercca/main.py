@@ -25,6 +25,16 @@ try:
 except Exception:
     from c_inventory_command import app as inventory  # noqa
 
+try:
+    from .c_ping_command import app as ping  # noqa
+except Exception:
+    from c_ping_command import app as ping  # noqa
+
+try:
+    from .c_merge_ping_command import app as ping_merge  # noqa
+except Exception:
+    from c_merge_ping_command import app as ping_merge  # noqa
+
 
 def main():
     return app()

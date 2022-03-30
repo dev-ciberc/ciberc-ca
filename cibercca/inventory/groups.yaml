@@ -1,3 +1,9 @@
 ---
 # {} => ejemplo
 guatemala: {}
+
+# for the ping report, it contains all the source computers
+src: {}
+
+# for the ping report, it contains all the destination computers
+dst: {}

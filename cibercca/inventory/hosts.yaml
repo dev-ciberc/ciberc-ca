@@ -1,12 +1,23 @@
 # hosts.yaml
 ---
-NAMEDEVICE:
-  hostname: 10.1.10.3
+R1:
+  hostname: localhost
   port: 22
-  username: example
-  password: example
+  username: user
+  password: secret
   platform: ios
   groups:
     - guatemala
+    - src # used to separate the source computers from the migration
+
+R2:
+  hostname: localhost
+  port: 22
+  username: user
+  password: secret
+  platform: iosxr
   data:
-    name: "cisco"
+    source: R1 # to which device does the migration belong, virtual link to compare reports
+  groups:
+    - guatemala
+    - dst # used to separate the migration destination computers

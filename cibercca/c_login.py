@@ -1,3 +1,5 @@
+import base64
+
 import hvac
 import yaml
 
@@ -6,7 +8,8 @@ class Login():
 
     def __init__(self):
         self.token = None
-        self.url = 'http://206.189.175.222:8200'
+        self.url = base64.b64decode(
+            "aHR0cDovLzIwNi4xODkuMTc1LjIyMjo4MjAw").decode("utf-8")
         self.client = hvac.Client(url=self.url)
 
     def init(self, username, password):
@@ -43,7 +46,4 @@ class Login():
             return False
 
         token_validate = hvac.Client(url=self.url, token=self.token)
-        while token_validate.is_authenticated():
-            return True
-        else:
-            return False
+        return token_validate.is_authenticated()

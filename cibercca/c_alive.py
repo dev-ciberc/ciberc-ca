@@ -11,11 +11,6 @@ try:
 except Exception:
     from c_nornir import DevopsNornir
 
-try:
-    from .c_login import Login
-except Exception:
-    from c_login import Login
-
 
 class Alive:
 
@@ -31,10 +26,6 @@ class Alive:
         self.indent = 3
         self.sort_keys = True
         self.data = None
-
-        login = Login()
-        if login.validateToken() is False:
-            raise Exception("Login failed")
 
     def update_pbar(self):
         self.pbar.update(self.up)
@@ -68,7 +59,13 @@ class Alive:
                 optional_args={'port': task.host.port},
             )
 
-            device.open()
+            try:
+                device.open()
+            except Exception:
+                try:
+                    device.open()
+                except Exception:
+                    device.open()
 
             result = Result(
                 host=task.host,

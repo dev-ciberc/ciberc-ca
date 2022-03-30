@@ -1,11 +1,6 @@
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill
 
-try:
-    from .c_login import Login
-except Exception:
-    from c_login import Login
-
 
 class ExcelInterfaces():
 
@@ -13,10 +8,6 @@ class ExcelInterfaces():
         self.wb = Workbook()
         self.ws = self.wb.create_sheet("interfaces", 0)
         self.font_header = Font(color='ffffff', bold=True)
-
-        login = Login()
-        if login.validateToken() is False:
-            raise Exception("Login failed")
 
     def setHeadCol(self, ws, col, name):
         self.ws[col] = name
@@ -206,6 +197,21 @@ class ExcelInterfaces():
                                         elif cant_ports > 1:
                                             EC_BVI = IS_BVI
 
+                                    # --
+                                    # --
+                                    # se aprovecha la verificacion de troncal
+                                    else:
+                                        # --
+                                        # solo para vlan que se comportan como troncales  # noqa
+                                        # si es modo trocal, el xconnect se verifica en vlan  # noqa
+                                        try:
+                                            xconnect = vlan['xconnect']
+                                            EC_SERVICE_XCONNECTIONS = xconnect['xconnect_ip']  # noqa
+                                            EC_SERVICE_XCONNECTIONS_VC_ID = xconnect['xconnect_id']  # noqa
+                                            EC_SERVICE_PW_CLASS = xconnect['xconnect_class']  # noqa
+                                            EC_SERVICE_PW_CLASS_DATA = xconnect['xconnect_class_data']  # noqa
+                                        except Exception:
+                                            pass
                                 except Exception:
                                     pass
 
@@ -233,7 +239,7 @@ class ExcelInterfaces():
                                     except Exception:
                                         ip_secundary_list = []
 
-                                    if ip_secundary_list is not [{}]:
+                                    if ip_secundary_list != [{}]:
                                         for secundary in ip_secundary_list:
 
                                             try:
@@ -270,7 +276,7 @@ class ExcelInterfaces():
                                     except Exception:
                                         ip_secundary_list = []
 
-                                    if ip_secundary_list is not [{}]:
+                                    if ip_secundary_list != [{}]:
 
                                         COLUMN = 16
                                         NUM_IP = 2

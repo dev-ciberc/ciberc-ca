@@ -2,6 +2,7 @@ import json
 import sys
 
 from napalm import get_network_driver
+from netmiko import ConnectHandler
 from nornir.core.task import Result, Task
 from tqdm import tqdm
 from ttp import ttp
@@ -21,11 +22,6 @@ try:
 except Exception:
     from c_interfaces_excel import ExcelInterfaces
 
-try:
-    from .c_login import Login
-except Exception:
-    from c_login import Login
-
 
 class Interfaces:
 
@@ -43,10 +39,6 @@ class Interfaces:
         self.data = None
         self.template = StringTemplates()
         self.exclude = -1
-
-        login = Login()
-        if login.validateToken() is False:
-            raise Exception("Login failed")
 
     def update_pbar(self):
         self.pbar.update(self.up)
@@ -68,22 +60,116 @@ class Interfaces:
 
         return True
 
-    def get_interfaces(self, device):
-        dict_interfaces = device.get_interfaces()
+    def get_interfaces(self, con):
+        # dict_interfaces = device.get_interfaces()
+        comando = "show interfaces description | i up"
+        out = con.send_command(comando, delay_factor=10)
+        try:
+            out += con.read_until_prompt()
+        except Exception:
+            pass
+
+        # --
+        # -- parsear informacion de interfaces
+        parser = ttp(data=out, template=self.template.get_ttp_template_interfaces_descriptions())  # noqa
+        parser.parse()
+        list_interfaces = parser.result()[0][0]
+
         filtrado = {}
+        list_interfaces = (list_interfaces["interfaces"])
 
-        if len(dict_interfaces) > 0:
-            # filtrado de interfaces solo activas
-            filtrado = dict(
-                filter(lambda i: i[1]['is_up'] is True, dict_interfaces.items()))  # noqa
+        filtrado = list(
+            filter(lambda x: x["state"].strip() == "up", list_interfaces))
 
-            filtrado = dict(filter(
-                lambda i: i[0].find('Vlan') == self.exclude
-                and i[0].find('Loop') == self.exclude
-                and i[0].find('Tu') == self.exclude, filtrado.items()
-            ))
+        filtrado = list(filter(
+            lambda i: i["interface"].find('Vl') == -1
+            and i["interface"].find('Lo') == -1
+            and i["interface"].find('Tu') == -1, filtrado
+        ))
 
-        return filtrado
+        # --
+        # -- segundo comando para ejecucion de las descripciones mas completas
+        # para la estrutura final
+        final_data_struct = {}
+
+        # [paso 02] por cada interface obtener su descripcion
+        for interface in filtrado:
+            interface_name = interface["interface"]
+            try:
+                comando = "show interfaces " + interface_name
+                out2 = con.send_command(comando, delay_factor=10)
+            except Exception as e:
+                print("error en comando: " + str(e))
+
+            try:
+                out2 += con.read_until_prompt()
+            except Exception:
+                pass
+
+            try:
+                # parseo de informacion por interface
+                parser = ttp(data=out2,
+                             template=self.template.get_ttp_template_interaces_data())  # noqa
+                parser.parse()
+                interface_data = parser.result()[0][0][0]
+
+                print(interface_data)
+
+                # generacion de la estrutura final
+
+                try:
+                    INTERFACE_NAME = interface_data["name"].strip()
+                except Exception:
+                    INTERFACE_NAME = None
+
+                try:
+                    INTERFACE_STATE = interface["state"].strip()
+                except Exception:
+                    INTERFACE_STATE = None
+
+                try:
+                    INTERFACE_PROTOCOL = interface["protocol"].strip()
+                except Exception:
+                    INTERFACE_PROTOCOL = None
+
+                try:
+                    INTERFACE_DESCRIPTION = interface["description"].strip()
+                except Exception:
+                    INTERFACE_DESCRIPTION = None
+
+                try:
+                    INT_MAC_ADDRESS = interface_data["hardware"]["mac_address"].strip()  # noqa
+                except Exception:
+                    INT_MAC_ADDRESS = None
+
+                try:
+                    INT_TYPE_HARDWARE = interface_data["hardware"]["type_hardware"].strip()  # noqa
+                except Exception:
+                    INT_TYPE_HARDWARE = None
+
+                try:
+                    INT_MTU = interface_data["mtu"]["mtu"].strip()  # noqa
+                except Exception:
+                    INT_MTU = None
+
+                try:
+                    INT_SPEED = interface_data["mtu"]["dly"].strip()  # noqa
+                except Exception:
+                    INT_SPEED = None
+
+                final_data_struct[INTERFACE_NAME] = {
+                    "description": INTERFACE_DESCRIPTION,
+                    "is_up": INTERFACE_STATE,
+                    "is_enabled": INTERFACE_PROTOCOL,
+                    "mtu": INT_MTU,
+                    "speed": INT_SPEED,
+                    "mac_address": INT_MAC_ADDRESS,
+                    "type_hardware": INT_TYPE_HARDWARE,
+                }
+            except Exception:
+                pass
+
+        return final_data_struct
 
     def get_services(self, device, interfaces_filtered):
         data = interfaces_filtered.copy()
@@ -91,6 +177,8 @@ class Interfaces:
         if len(interfaces_filtered) > 0:
             for key, value in interfaces_filtered.items():
                 comando = f"show run interface {key}"
+
+                print(key)
                 interface_data = device.cli([comando])
 
                 try:
@@ -98,8 +186,8 @@ class Interfaces:
                     parser = ttp(data=string_services,
                                  template=self.template.get_ttp_services())
                     parser.parse()
-                except Exception:
-                    pass
+                except Exception as e:
+                    print(f"error parse (get_ttp_services): {e}")
 
                 try:
                     services_per_interface = parser.result()[0][0]['services']
@@ -111,8 +199,8 @@ class Interfaces:
                         parser = ttp(data=string_services,
                                      template=self.template.get_ttp_trunk())
                         parser.parse()
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        print(f"error parse (get_ttp_trunk): {e}")
 
                     try:
                         services_per_interface = parser.result()[0][0]['services']  # noqa
@@ -261,8 +349,35 @@ class Interfaces:
 
     def execute(self, task: Task):
         try:
+            # primera etapa con netmiko
+            platform = "cisco_ios" if task.host.platform == "ios" else task.host.platform  # noqa
+            host = {
+                "ip": task.host.hostname,
+                "username": task.host.username,
+                "password": task.host.password,
+                'port': task.host.port,
+                "device_type": platform,
+            }
+
+            # [paso 01] apertura de la unica sesion por equipo
+            try:
+                device_with_netmiko = ConnectHandler(**host)
+            except Exception:
+                try:
+                    device_with_netmiko = ConnectHandler(**host)
+                except Exception:
+                    device_with_netmiko = ConnectHandler(**host)
+
+            # recolectar todas las interfaces del equipo
+            datos_interfaces = self.get_interfaces(device_with_netmiko)
+            # cierre de netmiko
+            device_with_netmiko.disconnect()
+
+            # segunda etapa con napalm
+            # [paso 02] apertura de la unica sesion por equipo
             driver = get_network_driver(task.host.platform)
 
+            # conexion con napalm
             device = driver(
                 hostname=task.host.hostname,
                 username=task.host.username,
@@ -271,11 +386,14 @@ class Interfaces:
                 optional_args={'port': task.host.port},
             )
 
-            # [paso 01] apertura de la unica sesion por equipo
-            device.open()
-
-            # [paso 02] recolectar todas las interfaces del equipo
-            datos_interfaces = self.get_interfaces(device)
+            # tres intentos de connexion
+            try:
+                device.open()
+            except Exception:
+                try:
+                    device.open()
+                except Exception:
+                    device.open()
 
             # [paso 03] recolectar todas las interfaces del equipo los servicios # noqa
             datos_interfaces = self.get_services(device, datos_interfaces)
@@ -298,6 +416,11 @@ class Interfaces:
         except Exception as e:
             try:
                 device.close()
+            except Exception:
+                pass
+
+            try:
+                device_with_netmiko.disconnect()
             except Exception:
                 pass
 

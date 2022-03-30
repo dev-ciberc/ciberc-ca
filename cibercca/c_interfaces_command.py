@@ -28,7 +28,7 @@ def callback_interface_path(value: Path):  # noqa
     if value.is_dir():
         return value
     raise typer.BadParameter("inventory is not directory",
-                             param_name="--path")
+                             param_hint="--path")
 
 
 def callback_interface_mechanism(value: str):  # noqa
@@ -60,7 +60,7 @@ def interfaces(
         # callback=callback_interface_path
     ),
     group: Optional[str] = typer.Option(
-        None,
+        ...,
         help="The groups to filter inventory"
     ),
     workers: Optional[int] = typer.Option(
@@ -87,8 +87,8 @@ def interfaces(
     Device interface information
 
     Example:\n
-        - python3 core/main.py interfaces --path=core/inventory/ --output=json > interfaces.json\n
-        - python3 core/main.py interfaces --path=core/inventory/ --output=excel --mechanism=row --name=interfaces > interfaces.json
+        - python3 core/main.py interfaces --path=core/inventory/ --group=src --output=json > interfaces.json\n
+        - python3 core/main.py interfaces --path=core/inventory/ --group=src --output=excel --mechanism=row --name=interfaces > interfaces.json
     """  # noqa
 
     # validaciones callback
