@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cibercca"
-version = "0.2.0"
+version = "0.2.1"
 description = "CiberC Code Automation - reports excel and json formats"
 authors = ["Rafael Garcia Sagastume <rafael.garcia@ciberc.com>"]
 license = "BSD 3-Clause License"
