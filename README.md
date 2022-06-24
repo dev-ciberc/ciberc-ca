@@ -2,7 +2,52 @@
 
 CiberC Code Automation
 
-# Commands:
+Generation of interface reports for IOS devices in parallel, cross validations for migration of VRFs from IOS devices to XR
+
+# https://www.ciberc.com
+
+#  Technology stack
+
+Python 3.6 or higher
+
+#  Status
+
+latest version validated and tested
+
+# Use Case Description
+
+One of our clients generated the VRF migration report in an exhausting time, in terms of the client, one week to validate each piece of equipment, ciberc-ca generates a comparative cross-validation report saving a lot of time and avoiding human errors.
+
+# Installation
+
+```
+Ubuntu 20.04 or o any Distribution of Linux with support to Python3
+```
+
+# Steps to install in Ubuntu workstation (automation station)
+
+```
+prepare environment:
+  sudo apt-get install python3
+  sudo apt-get install git
+  sudo apt-get install python3-pip
+  python3 -m pip install virtualenv
+
+  mkdir code & cd code
+  python3 -m venv .venv
+  source .venv/bin/activate
+  python3 -m pip install cibercca
+
+```
+
+
+# Configuration
+
+The first step is to create the inventory files, in these will go the record of the devices assigned to evaluate
+
+# Examples
+
+## Commands:
 
 ```
 Commands:
@@ -12,21 +57,6 @@ Commands:
   login       Login on (CiberC Code Automations) [not required]
   ping        report por vrf and ping results for inventory devices
   ping-merge  Command to merge the source vrf listing files and...
-```
-
-### Login command:
-
-```
-Description: login on ciberc-ca for use
-
-Options:
-  --name TEXT      The name user for ciberc-ca  [required]
-  --password TEXT  [required]
-
-Example:
-    $ ciberc-ca login --name=name-example
-        $ password:
-        $ Repeat for confirmation:
 ```
 
 ### Alive command:
@@ -115,3 +145,84 @@ Example:
     $ ciberc-ca ping-merge --file-src=file_vrfs_source.json --file-dst=file_vrf_destinations.json --output=excel --name=ReporteMigrations
 
 ```
+
+# Structure
+
+```
+inventory/
+├── defaults.yaml
+├── groups.yaml
+└── hosts.yaml
+
+
+Inventory is based on nornir structure
+
+  defaults.yaml: Contains all the default variables for the devices.
+
+  groups.yaml: Although based on nornir groups, two mandatory groups are needed for configuration, src, dst for the cross-validation ping-merge command.
+
+  hosts.yaml: where all IOS devices are registered for interface reporting, source IOS and destination XR for VRF's migration
+```
+
+
+# Usage
+
+para implementar el servicio una vez que haya definido los equipos en el archivo de hosts (aquí se define el usuario y la contraseña que se aplicará por tipo de dispositivo), los nombres de los dispositivos de red correctamente (en el archivo etc/hosts) y los dispositivos tienen la configuración de SSH, entonces colocaría los comandos de ejemplo para activar el agente ssh y xml en XR.
+
+# configuration example in XR device
+```
+# default.yaml
+---
+data:
+  domain: local.local
+
+
+# groups.yaml
+---
+# {} => ejemplo
+guatemala: {}
+
+# for the ping report, it contains all the source computers
+src: {}
+
+# for the ping report, it contains all the destination computers
+dst: {}
+
+
+# hosts.yaml
+---
+R1:
+  hostname: localhost
+  port: 22
+  username: user
+  password: secret
+  platform: ios
+  groups:
+    - guatemala
+    - src # used to separate the source computers from the migration
+
+R2:
+  hostname: localhost
+  port: 22
+  username: user
+  password: secret
+  platform: iosxr
+  data:
+    source: R1 # to which device does the migration belong, virtual link to compare reports
+  groups:
+    - guatemala
+    - dst # used to separate the migration destination computers
+
+
+```
+
+
+# How to test the software
+
+you can check the configuration in the devices in the generated report
+
+# Getting help
+
+If you have questions, concerns, bug reports, etc., please create an issue against this repository, or send me an email to: Dev.auto@ciberc.com
+
+# Link Video Example
