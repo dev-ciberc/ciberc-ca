@@ -226,4 +226,4 @@ you can check the configuration in the devices in the generated report
 If you have questions, concerns, bug reports, etc., please create an issue against this repository, or send me an email to: Dev.auto@ciberc.com
 
 # Link Video Example
-https://youtu.be/d_Vwdx62hG8
+[https://youtu.be/d_Vwdx62hG8](https://www.youtube.com/watch?v=d_Vwdx62hG8)
