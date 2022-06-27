@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from typing import Optional
 
 try:
@@ -16,10 +17,22 @@ except Exception:
 
 @app.command()
 def alive(
-    path: Optional[str] = None,
-    group: Optional[str] = None,
-    workers: Optional[int] = None,
-    output: Optional[str] = None,
+    path: Optional[Path] = typer.Option(
+        ...,
+        help="The path to inventory",
+    ),
+    group: Optional[str] = typer.Option(
+        ...,
+        help="The groups to filter inventory"
+    ),
+    workers: Optional[int] = typer.Option(
+        2,
+        help="The parallel execution"
+    ),
+    output: Optional[str] = typer.Option(
+        "json",
+        help="The type to print report",
+    ),
 ):
     """
     Alive for all device filter with groups

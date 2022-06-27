@@ -6,11 +6,6 @@ except Exception:
 
 # tipo de importacion para identificar con cython o manual
 try:
-    from .c_login_command import app as login  # noqa
-except Exception:
-    from c_login_command import app as login  # noqa
-
-try:
     from .c_alive_command import app as alive  # noqa
 except Exception:
     from c_alive_command import app as alive  # noqa

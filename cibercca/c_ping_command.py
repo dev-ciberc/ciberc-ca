@@ -107,11 +107,6 @@ def ping(
         help="what type of process for the vrf report [src, dst]",
         callback=callback_process
     ),
-    input: Optional[str] = typer.Option(
-        "",
-        help="vrf source input data, [json, excel]",
-        # callback=callback_input
-    ),
 ):
     """
     report por vrf and ping results for inventory devices

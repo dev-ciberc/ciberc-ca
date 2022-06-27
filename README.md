@@ -54,7 +54,6 @@ Commands:
   alive       Alive for all device filter with groups
   interfaces  Device interface information
   inventory   Create files for inventory system
-  login       Login on (CiberC Code Automations) [not required]
   ping        report por vrf and ping results for inventory devices
   ping-merge  Command to merge the source vrf listing files and...
 ```
@@ -226,3 +225,4 @@ you can check the configuration in the devices in the generated report
 If you have questions, concerns, bug reports, etc., please create an issue against this repository, or send me an email to: Dev.auto@ciberc.com
 
 # Link Video Example
+https://www.youtube.com/watch?v=d_Vwdx62hG8
