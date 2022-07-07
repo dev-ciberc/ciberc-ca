@@ -166,7 +166,7 @@ Inventory is based on nornir structure
 
 # Usage
 
-para implementar el servicio una vez que haya definido los equipos en el archivo de hosts (aquí se define el usuario y la contraseña que se aplicará por tipo de dispositivo), los nombres de los dispositivos de red correctamente (en el archivo etc/hosts) y los dispositivos tienen la configuración de SSH, entonces colocaría los comandos de ejemplo para activar el agente ssh y xml en XR.
+To implement the service once you have defined the computers in the hosts file (here you define the user and password that will be applied per device type), the names of the network devices correctly (in the etc/hosts file) and the devices have SSH setup, then I would put the example commands to activate the ssh and xml agent in XR.
 
 # configuration example in XR device
 ```
