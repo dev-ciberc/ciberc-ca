@@ -2,13 +2,13 @@
 
 CiberC Code Automation
 
-Generation of interface reports for IOS devices in parallel, cross validations for migration of VRFs from IOS devices to XR
+Generation of interface reports for IOS devices in parallel, cross validations for migration of VRFs from IOS devices to XR with option for save data from devices in database MongoDB.
 
 # https://www.ciberc.com
 
 #  Technology stack
 
-Python 3.6 or higher
+Python >= 3.8 or < 4.0
 
 #  Status
 
@@ -16,7 +16,7 @@ latest version validated and tested
 
 # Use Case Description
 
-One of our clients generated the VRF migration report in an exhausting time, in terms of the client, one week to validate each piece of equipment, ciberc-ca generates a comparative cross-validation report saving a lot of time and avoiding human errors.
+One of our clients generated the VRF migration report in an exhausting time, in terms of the client, one week to validate each piece of equipment, ciberc-ca generates a comparative cross-validation report saving a lot of time and avoiding human errors, at the same time it allows saving and viewing records of alive and interfaces command when establishing a connection with a MongoDB database.
 
 # Installation
 
@@ -33,44 +33,32 @@ prepare environment:
   sudo apt-get install python3-pip
   python3 -m pip install virtualenv
 
-  mkdir code & cd code
-  python3 -m venv .venv
-  source .venv/bin/activate
+  python3 -m venv env
+  source env/bin/activate
   python3 -m pip install cibercca
+  mkdir code & cd code
 
 ```
-
 
 # Configuration
 
 The first step is to create the inventory files, in these will go the record of the devices assigned to evaluate
 
-# Examples
-
-## Commands:
-
-```
-Commands:
-  alive       Alive for all device filter with groups
-  interfaces  Device interface information
-  inventory   Create files for inventory system
-  ping        report por vrf and ping results for inventory devices
-  ping-merge  Command to merge the source vrf listing files and...
-```
 
 ### Alive command:
 
 ```
-Description: ping report of all inventory devices
+Description: Ping report of all inventory devices. When --output=database must be establish database connection 
 
 Options:
   --path TEXT
   --group TEXT
   --workers INTEGER
-  --output TEXT
+  --output TEXT      The type to print report (json, table or database)  [default: json]
 
 Example:
     $ ciberc-ca alive --path=inventory/ --group=guatemala --workers=4 --output=json > alive-report.json
+    $ ciberc-ca alive --path=inventory/ --group=guatemala --workers=4 --output=database
 ```
 
 ### Inventory files command:
@@ -88,7 +76,7 @@ Example:
 ### Interfaces command:
 
 ```
-Description: report interfaces of cisco ios devices currently, generates report in json as a summary in excel
+Description: report interfaces of cisco ios devices currently, generates report in json as a summary in excel. When --output=database must be establish database connection
     - BVI
     - Vlans
     - trunk interfaces
@@ -99,13 +87,14 @@ Options:
   --path PATH        The path to inventory  [required]
   --group TEXT       The groups to filter inventory [required]
   --workers INTEGER  The parallel execution  [default: 2]
-  --output TEXT      The type to print report  [default: json]
+  --output TEXT      The type to print report (json, excel and database) [default: json]
   --mechanism TEXT   The excel mechanism to print report
   --name TEXT        The name of excel report
 
 Example:
-    $ ciberc-ca interfaces --path=core/inventory/ --output=json > interfaces.json
+    $ ciberc-ca interfaces --path=core/inventory/ --group=guatemala --output=json > interfaces.json
     $ ciberc-ca interfaces --path=core/inventory/ --output=excel --mechanism=row --name=interfaces > interfaces.json
+    $ ciberc-ca interfaces --path=core/inventory/ --group=guatemala --output=database
 ```
 
 
@@ -145,16 +134,35 @@ Example:
 
 ```
 
+### records command:
+
+```
+Description: Return record list for type of command, just if exist data and connection with MongoDB (alive or interfaces)
+
+Options:
+  --command TEXT  Type of command (alive or interfaces)  [required]
+
+
+
+Example:
+    $ ciberc-ca records ---command=alive
+    $ ciberc-ca records ---command=interfaces
+
+```
+
 # Structure
 
 ```
 inventory/
+├── dbconnect.yaml
 ├── defaults.yaml
 ├── groups.yaml
 └── hosts.yaml
 
 
 Inventory is based on nornir structure
+
+  dbconnect.yaml: Contains url connection for MongoDB.
 
   defaults.yaml: Contains all the default variables for the devices.
 
@@ -166,7 +174,7 @@ Inventory is based on nornir structure
 
 # Usage
 
-To implement the service once you have defined the computers in the hosts file (here you define the user and password that will be applied per device type), the names of the network devices correctly (in the etc/hosts file) and the devices have SSH setup, then I would put the example commands to activate the ssh and xml agent in XR.
+Para implementar el servicio una vez que haya definido los equipos en el archivo de hosts (aquí se define el usuario y la contraseña que se aplicará por tipo de dispositivo), los nombres de los dispositivos de red correctamente (en el archivo etc/hosts) y los dispositivos tienen la configuración de SSH, entonces colocaría los comandos de ejemplo para activar el agente ssh y xml en XR.
 
 # configuration example in XR device
 ```
@@ -225,4 +233,4 @@ you can check the configuration in the devices in the generated report
 If you have questions, concerns, bug reports, etc., please create an issue against this repository, or send me an email to: Dev.auto@ciberc.com
 
 # Link Video Example
-https://www.youtube.com/watch?v=d_Vwdx62hG8
+https://youtu.be/Ca5pvCZadhg

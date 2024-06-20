@@ -7,6 +7,15 @@ from nornir.core.task import Result, Task
 from tqdm import tqdm
 from ttp import ttp
 
+import database as dbase
+from datetime import datetime
+from flask import jsonify
+
+try:
+    from .data_cibercca import Data_cibercca
+except Exception:
+    from data_cibercca import Data_cibercca
+
 try:
     from .c_nornir import DevopsNornir
 except Exception:
@@ -59,6 +68,35 @@ class Interfaces:
             return False
 
         return True
+    
+    def data_database(self):
+ 
+        data_save = json.dumps(self.data, indent=self.indent,
+                          sort_keys=self.sort_keys)
+
+        Interfaces.addData(data_save)
+
+    def addData(data_save):
+        db = dbase.dbConecction()
+
+        info = db["db_cibercca"]
+        command = 'interfaces'
+        date =  datetime.now()
+        data_from_device = data_save
+
+        if command and date and data_from_device:
+                item = Data_cibercca(command, date,data_from_device)
+                info.insert_one(item.toDBCollection())
+                response = jsonify({
+                    'command' : command,
+                    'date' : date,
+                    'data_from_device': data_from_device
+                })
+                return response
+        else:
+                return print('Data could not be saved. Please, verify database connection.')
+
+
 
     def get_interfaces(self, con):
         # dict_interfaces = device.get_interfaces()

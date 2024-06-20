@@ -6,6 +6,15 @@ from nornir.core.task import Result, Task
 from tabulate import tabulate
 from tqdm import tqdm
 
+import database as dbase
+from datetime import datetime
+from flask import jsonify
+
+try:
+    from .data_cibercca import Data_cibercca
+except Exception:
+    from data_cibercca import Data_cibercca
+
 try:
     from .c_nornir import DevopsNornir
 except Exception:
@@ -47,6 +56,15 @@ class Alive:
                 pass
         data = (tabulate(array_for_tabulate, headers='firstrow', tablefmt='grid'))  # noqa
         return data
+    
+    def data_database(self):
+ 
+        data_save = json.dumps(self.data, indent=self.indent,
+                          sort_keys=self.sort_keys)
+
+        response = Alive.addData(data_save)
+
+        print(response)
 
     def alive(self, task: Task):
         try:
@@ -109,3 +127,24 @@ class Alive:
         self.data = dict_result
 
         return dict_result
+
+    def addData(data_save):
+        db = dbase.dbConecction()
+
+        info = db["db_cibercca"]
+        command = 'alive'
+        date =  datetime.now()
+        data_from_device = data_save
+
+        if command and date and data_from_device:
+                item = Data_cibercca(command, date,data_from_device)
+                info.insert_one(item.toDBCollection())
+                response = jsonify({
+                    'command' : command,
+                    'date' : date,
+                    'data_from_device': data_from_device
+                })
+                
+                return 'Data saved.'
+        else:
+                return print('Data could not be saved. Please, verify database connection.')

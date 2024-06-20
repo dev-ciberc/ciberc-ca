@@ -51,3 +51,6 @@ def alive(
 
     if output == 'table':
         print(alive.data_table())
+
+    if output == 'database':
+        print(alive.data_database())

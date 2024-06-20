@@ -1,0 +1,3 @@
+---
+database:
+  mongodbUri: 'url_for_connect'

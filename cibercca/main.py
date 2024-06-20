@@ -1,3 +1,4 @@
+
 try:
     from .c_typer import app
 except Exception:
@@ -29,6 +30,11 @@ try:
     from .c_merge_ping_command import app as ping_merge  # noqa
 except Exception:
     from c_merge_ping_command import app as ping_merge  # noqa
+
+try:
+    from .c_records_command import app as records  # noqa
+except Exception:
+    from c_records_command import app as records  # noqa
 
 
 def main():

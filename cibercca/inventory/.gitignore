@@ -2,6 +2,7 @@
 *
 # excepto
 !.gitignore
+!dbconnect.yaml
 !defaults.yaml
 !groups.yaml
 !hosts.yaml

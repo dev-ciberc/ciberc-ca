@@ -1,0 +1,34 @@
+import json
+import sys
+
+from napalm import get_network_driver
+from nornir.core.task import Result, Task
+from tabulate import tabulate
+from tqdm import tqdm
+
+import database as dbase
+
+
+class Records:
+
+    def findData(command):
+        try:
+            db = dbase.dbConecction()
+
+            info = db["db_cibercca"]
+
+            # Apply filter          
+            filter = {'command': str(command)}
+            infoReceived = list(info.find(filter))
+
+            for item in infoReceived:
+                if '_id' in item:
+                    item['data_from_device'] = json.loads(item['data_from_device'])
+                    del item['_id']
+
+            documentos_json = json.dumps(infoReceived, default=str, indent=4)
+
+            return documentos_json
+
+        except:
+            return print('Do not exist data in Database')

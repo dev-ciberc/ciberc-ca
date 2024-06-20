@@ -17,8 +17,8 @@ state = {}
 
 
 def callback_interface_output(value: str):  # noqa
-    if value not in ['json', 'excel']:
-        raise typer.BadParameter("Only json or excel type is valid",
+    if value not in ['json', 'excel','database']:
+        raise typer.BadParameter("Only json, excel or database type is valid",
                                  param_hint="--output")
     state['output'] = value
     return value
@@ -113,3 +113,6 @@ def interfaces(
         if status is False:
             return "excel not created."
         print(data.data_json())
+    
+    if output == 'database':
+        print(data.data_database())
