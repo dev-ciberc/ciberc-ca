@@ -17,7 +17,7 @@ class Records:
 
             info = db["db_cibercca"]
 
-            # Apply filter for device         
+            # Apply filter for data         
             filter = {'command': str(command)}
             infoReceived = list(info.find(filter))
 
