@@ -6,14 +6,14 @@ from nornir.core.task import Result, Task
 from tabulate import tabulate
 from tqdm import tqdm
 
-import database as dbase
+from .c_database import db_conecction as dbase
 
 
 class Records:
 
     def findData(command):
         try:
-            db = dbase.dbConecction()
+            db = dbase()
 
             info = db["db_cibercca"]
 

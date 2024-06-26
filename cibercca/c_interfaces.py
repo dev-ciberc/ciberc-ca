@@ -7,29 +7,26 @@ from nornir.core.task import Result, Task
 from tqdm import tqdm
 from ttp import ttp
 
-import database as dbase
+from .c_database import db_conecction
+from .data_cibercca import Data_cibercca
 from datetime import datetime
 from flask import jsonify
 
-try:
-    from .data_cibercca import Data_cibercca
-except Exception:
-    from data_cibercca import Data_cibercca
 
 try:
     from .c_nornir import DevopsNornir
 except Exception:
-    from c_nornir import DevopsNornir
+    from .c_nornir import DevopsNornir
 
 try:
     from .c_templates import StringTemplates
 except Exception:
-    from c_templates import StringTemplates
+    from .c_templates import StringTemplates
 
 try:
     from .c_interfaces_excel import ExcelInterfaces
 except Exception:
-    from c_interfaces_excel import ExcelInterfaces
+    from .c_interfaces_excel import ExcelInterfaces
 
 
 class Interfaces:
@@ -59,30 +56,20 @@ class Interfaces:
                           sort_keys=self.sort_keys)
         return data
 
-    def data_excel(self, mechanism, name):
-        try:
-            excel = ExcelInterfaces()
-            excel.create(self.data, mechanism)
-            excel.save(name)
-        except Exception:
-            return False
-
-        return True
-    
     def data_database(self):
  
         data_save = json.dumps(self.data, indent=self.indent,
                           sort_keys=self.sort_keys)
 
-        Interfaces.addData(data_save)
+        Interfaces.add_data(data_save)
 
-    def addData(data_save):
-        db = dbase.dbConecction()
+    def add_data(self):
+        db = db_conecction()
 
         info = db["db_cibercca"]
         command = 'interfaces'
         date =  datetime.now()
-        data_from_device = data_save
+        data_from_device = self
 
         if command and date and data_from_device:
                 item = Data_cibercca(command, date,data_from_device)
@@ -97,6 +84,15 @@ class Interfaces:
                 return print('Data could not be saved. Please, verify database connection.')
 
 
+    def data_excel(self, mechanism, name):
+        try:
+            excel = ExcelInterfaces()
+            excel.create(self.data, mechanism)
+            excel.save(name)
+        except Exception:
+            return False
+
+        return True
 
     def get_interfaces(self, con):
         # dict_interfaces = device.get_interfaces()

@@ -8,7 +8,7 @@ Generation of interface reports for IOS devices in parallel, cross validations f
 
 #  Technology stack
 
-Python >= 3.8 or < 4.0
+Python >= 3.8 or > 4.0
 
 #  Status
 
@@ -36,13 +36,27 @@ prepare environment:
   python3 -m venv env
   source env/bin/activate
   python3 -m pip install cibercca
-  mkdir code & cd code
+  mkdir code
+  cd code
 
 ```
 
 # Configuration
 
 The first step is to create the inventory files, in these will go the record of the devices assigned to evaluate
+
+### Inventory files command:
+
+```
+Description: create the necessary files to create the cyberc-ca system inventory
+
+Options:
+  --create / --no-create  create files from inventory examples  [default: no-create]
+
+Example:
+    $ ciberc-ca inventory --create
+```
+
 
 
 ### Alive command:
@@ -59,18 +73,6 @@ Options:
 Example:
     $ ciberc-ca alive --path=inventory/ --group=guatemala --workers=4 --output=json > alive-report.json
     $ ciberc-ca alive --path=inventory/ --group=guatemala --workers=4 --output=database
-```
-
-### Inventory files command:
-
-```
-Description: create the necessary files to create the cyberc-ca system inventory
-
-Options:
-  --create / --no-create  create files from inventory examples  [default: no-create]
-
-Example:
-    $ ciberc-ca inventory --create
 ```
 
 ### Interfaces command:

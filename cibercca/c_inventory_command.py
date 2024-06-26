@@ -1,9 +1,10 @@
 import os
+import platform
 
 try:
     from .c_typer import app, typer
 except Exception:
-    from c_typer import app, typer
+    from .c_typer import app, typer
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -18,9 +19,16 @@ def inventory(
     """
     Create files for inventory system
     """
+    system = platform.system()
+
     if create:
         exists = os.path.exists("./inventory/")
         if not exists:
-            os.system(f"cp -r {BASE_DIR}/inventory/ .")
+            if system == "Windows":
+                os.system(f"xcopy /E /I \"{BASE_DIR}\\inventory\" .\\inventory")
+            elif system in ["Linux", "Darwin"]:
+                os.system(f"cp -r {BASE_DIR}/inventory/ .")
+            else:
+                print(f"Unsupported OS: {system}")
         else:
-            print("inventory already exists")
+            print("Inventory already exists")

@@ -1,19 +1,15 @@
+import sys
 import os
 from pathlib import Path
 from typing import Optional
+from .c_alive import Alive
 
 try:
     from .c_typer import app, typer
 except Exception:
-    from c_typer import app, typer  # noqa
+    from .c_typer import app, typer  # noqa
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-try:
-    from .c_alive import Alive
-except Exception:
-    from c_alive import Alive
-
 
 @app.command()
 def alive(
@@ -51,6 +47,7 @@ def alive(
 
     if output == 'table':
         print(alive.data_table())
-
+    
     if output == 'database':
         print(alive.data_database())
+    

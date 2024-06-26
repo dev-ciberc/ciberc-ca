@@ -6,19 +6,20 @@ from nornir.core.task import Result, Task
 from tabulate import tabulate
 from tqdm import tqdm
 
-import database as dbase
+from .c_database import db_conecction
+from .data_cibercca import Data_cibercca
 from datetime import datetime
 from flask import jsonify
 
 try:
-    from .data_cibercca import Data_cibercca
+    from .c_nornir import DevopsNornir
 except Exception:
-    from data_cibercca import Data_cibercca
+    from .c_nornir import DevopsNornir
 
 try:
     from .c_nornir import DevopsNornir
 except Exception:
-    from c_nornir import DevopsNornir
+    from .c_nornir import DevopsNornir
 
 
 class Alive:
@@ -62,11 +63,11 @@ class Alive:
         data_save = json.dumps(self.data, indent=self.indent,
                           sort_keys=self.sort_keys)
 
-        response = Alive.addData(data_save)
+        response = Alive.add_data(data_save)
 
         print(response)
 
-    def alive(self, task: Task):
+    def _alive(self, task: Task):
         try:
             driver = get_network_driver(task.host.platform)
 
@@ -106,7 +107,7 @@ class Alive:
         self.update_pbar()
 
         return result
-
+    
     def run(self):
         dict_result = {}
 
@@ -116,7 +117,7 @@ class Alive:
 
             result = self.nr.run(
                 name="alive",
-                task=self.alive,
+                task=self._alive,
             )
 
             self.pbar.close()
@@ -128,13 +129,14 @@ class Alive:
 
         return dict_result
 
-    def addData(data_save):
-        db = dbase.dbConecction()
+    
+    def add_data(self):
+        db = db_conecction()
 
         info = db["db_cibercca"]
         command = 'alive'
         date =  datetime.now()
-        data_from_device = data_save
+        data_from_device = self
 
         if command and date and data_from_device:
                 item = Data_cibercca(command, date,data_from_device)
@@ -145,6 +147,6 @@ class Alive:
                     'data_from_device': data_from_device
                 })
                 
-                return 'Data saved.'
+                return response
         else:
                 return print('Data could not be saved. Please, verify database connection.')

@@ -4,12 +4,12 @@ from typing import Optional
 try:
     from .c_typer import app, typer
 except Exception:
-    from c_typer import app, typer
+    from .c_typer import app, typer
 
 try:
     from .c_interfaces import Interfaces
 except Exception:
-    from c_interfaces import Interfaces
+    from .c_interfaces import Interfaces
 
 
 # almacena la informacion del estado para los comandos
@@ -17,8 +17,8 @@ state = {}
 
 
 def callback_interface_output(value: str):  # noqa
-    if value not in ['json', 'excel','database']:
-        raise typer.BadParameter("Only json, excel or database type is valid",
+    if value not in ['json', 'excel', 'database']:
+        raise typer.BadParameter("Only json or excel type is valid",
                                  param_hint="--output")
     state['output'] = value
     return value
@@ -49,7 +49,7 @@ def callback_interface_name(value: str):  # noqa
             raise typer.BadParameter(
                 "a name has not been defined for the excel file",
                 param_hint="--name")
-    return value
+        return value
 
 
 @app.command()
@@ -57,7 +57,6 @@ def interfaces(
     path: Optional[Path] = typer.Option(
         ...,
         help="The path to inventory",
-        # callback=callback_interface_path
     ),
     group: Optional[str] = typer.Option(
         ...,
@@ -70,17 +69,14 @@ def interfaces(
     output: Optional[str] = typer.Option(
         "json",
         help="The type to print report",
-        # callback=callback_interface_output
     ),
     mechanism: Optional[str] = typer.Option(
         "",
         help="The excel mechanism to print report",
-        # callback=callback_interface_mechanism
     ),
     name: Optional[str] = typer.Option(
         "",
         help="The name of excel report",
-        # callback=callback_interface_name
     ),
 ):
     """
@@ -113,6 +109,6 @@ def interfaces(
         if status is False:
             return "excel not created."
         print(data.data_json())
-    
+
     if output == 'database':
         print(data.data_database())
