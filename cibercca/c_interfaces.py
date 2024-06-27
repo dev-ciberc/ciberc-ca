@@ -8,7 +8,7 @@ from tqdm import tqdm
 from ttp import ttp
 
 from .c_database import db_conecction
-from .data_cibercca import Data_cibercca
+from .data_cibercca import DataCibercca
 from datetime import datetime
 from flask import jsonify
 
@@ -72,8 +72,8 @@ class Interfaces:
         data_from_device = self
 
         if command and date and data_from_device:
-                item = Data_cibercca(command, date,data_from_device)
-                info.insert_one(item.toDBCollection())
+                item = DataCibercca(command, date,data_from_device)
+                info.insert_one(item.to_db_collection())
                 response = jsonify({
                     'command' : command,
                     'date' : date,

@@ -1,12 +1,14 @@
 from pymongo import MongoClient
 import certifi
 import yaml
+import os
 
-with open("./inventory/dbconnect.yaml", "r") as file:
-    config = yaml.safe_load(file)
+if os.path.isfile("./inventory/dbconnect.yaml"):
+    with open("./inventory/dbconnect.yaml", "r") as file:
+        config = yaml.safe_load(file)
     
-uri = config['database']['mongodbUri']
-ca = certifi.where()
+    uri = config['database']['mongodbUri']
+    ca = certifi.where()
 
 def db_conecction():
     try:

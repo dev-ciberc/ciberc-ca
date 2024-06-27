@@ -136,7 +136,7 @@ Example:
 
 ```
 
-### records command:
+### Records command:
 
 ```
 Description: Return record list for type of command, just if exist data and connection with MongoDB (alive or interfaces)

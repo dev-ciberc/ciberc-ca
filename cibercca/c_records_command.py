@@ -25,7 +25,7 @@ def records(
     """
 
     if command:
-        print(Records.findData(command))
+        print(Records.find_data(command))
 
     
     

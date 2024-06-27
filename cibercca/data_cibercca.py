@@ -1,10 +1,10 @@
-class Data_cibercca:
+class DataCibercca:
     def __init__(self, command,date,data_from_device):
         self.command = command
         self.date = date
         self.data_from_device = data_from_device
 
-    def toDBCollection(self):
+    def to_db_collection(self):
         return{
             'command': self.command,
             'date': self.date,
