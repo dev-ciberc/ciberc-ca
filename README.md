@@ -8,7 +8,7 @@ Generation of interface reports for IOS devices in parallel, cross validations f
 
 #  Technology stack
 
-Python >= 3.8 or > 4.0
+Python >= 3.8 or < 4.0
 
 #  Status
 
