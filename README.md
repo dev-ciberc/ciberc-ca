@@ -44,6 +44,8 @@ prepare environment:
 # Steps to install using Visual Studio Code
 
 ```
+You can follow this steps or view this video example https://youtu.be/Ca5pvCZadhg
+
 1. Install Python version >=3.8 or <4.0
 	First, download and install Python from the official Python page.
 	Make sure to check the "Add Python to PATH" option during the installation.
