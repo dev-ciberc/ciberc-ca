@@ -4,6 +4,7 @@ version = "0.2.5"
 description = "CiberC Code Automation - reports excel and json formats and save data in MongoDB"
 authors = ["Verni Hernandez <verni.hernandez@ciberc.com>"]
 license = "BSD 3-Clause License"
+readme = "README.md"
 
 classifiers = [
     "Environment :: Console",
