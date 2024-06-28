@@ -41,6 +41,55 @@ prepare environment:
 
 ```
 
+# Steps to install using Visual Studio Code
+
+```
+You can follow this steps or view this video example https://youtu.be/Ca5pvCZadhg
+
+1. Install Python version >=3.8 or <4.0
+	First, download and install Python from the official Python page.
+	Make sure to check the "Add Python to PATH" option during the installation.
+
+	python --version
+
+	URL to download Python 3.9.13: https://www.python.org/downloads/release/python-3913/
+
+2. Install Git
+	Download and install Git from the official Git page: https://git-scm.com/download/win
+
+3. Install pip (package installer for Python) (if not included with Python)
+	Generally, the Python installation on Windows includes pip automatically. To verify, open the Command Prompt (cmd) and run:
+
+	python -m ensurepip --upgrade
+
+4. Start a Python project in Visual Studio Code
+
+	Install virtualenv using pip
+	Open the Command Prompt (cmd as administrator) and run:
+
+	python -m pip install virtualenv
+
+5. Create and activate a virtual environment in Visual Studio Code
+	Open the Command Prompt (cmd as administrator) and run the following commands to create and activate a virtual environment:
+
+	python -m venv env
+
+	To activate the virtual environment run:
+
+	env\Scripts\activate
+
+	Then create a new folder called code:
+	mkdir code
+	cd code
+
+6. Install cibercca using pip within the virtual environment
+
+	With the virtual environment activated, install cibercca:
+
+	python -m pip install cibercca
+
+```
+
 # Configuration
 
 The first step is to create the inventory files, in these will go the record of the devices assigned to evaluate
