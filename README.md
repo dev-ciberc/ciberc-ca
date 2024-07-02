@@ -78,7 +78,7 @@ You can follow this steps or view this video example https://youtu.be/Ca5pvCZadh
 
 	env\Scripts\activate
 
-	Then create a new folder called code:
+	Then create a new folder called code, this folder is going to use to do the management and data of the device network independent:
 	mkdir code
 	cd code
 
@@ -97,13 +97,15 @@ The first step is to create the inventory files, in these will go the record of 
 ### Inventory files command:
 
 ```
-Description: create the necessary files to create the cyberc-ca system inventory
+Description: Create the necessary files to create the cyberc-ca system inventory
 
 Options:
   --create / --no-create  create files from inventory examples  [default: no-create]
 
+Note: Remember to execute command into folder './code >'
+
 Example:
-    $ ciberc-ca inventory --create
+    > ciberc-ca inventory --create
 ```
 
 
@@ -119,9 +121,11 @@ Options:
   --workers INTEGER
   --output TEXT      The type to print report (json, table or database)  [default: json]
 
+Note: Remember to execute command into folder './code>'
+
 Example:
-    $ ciberc-ca alive --path=inventory/ --group=guatemala --workers=4 --output=json > alive-report.json
-    $ ciberc-ca alive --path=inventory/ --group=guatemala --workers=4 --output=database
+    > ciberc-ca alive --path=inventory/ --group=guatemala --workers=4 --output=json > alive-report.json
+    > ciberc-ca alive --path=inventory/ --group=guatemala --workers=4 --output=database
 ```
 
 ### Interfaces command:
@@ -142,10 +146,12 @@ Options:
   --mechanism TEXT   The excel mechanism to print report
   --name TEXT        The name of excel report
 
+Note: Remember to execute command into folder './code>'
+
 Example:
-    $ ciberc-ca interfaces --path=core/inventory/ --group=guatemala --output=json > interfaces.json
-    $ ciberc-ca interfaces --path=core/inventory/ --output=excel --mechanism=row --name=interfaces > interfaces.json
-    $ ciberc-ca interfaces --path=core/inventory/ --group=guatemala --output=database
+    > ciberc-ca interfaces --path=core/inventory/ --group=guatemala --output=json > interfaces.json
+    > ciberc-ca interfaces --path=core/inventory/ --output=excel --mechanism=row --name=interfaces > interfaces.json
+    > ciberc-ca interfaces --path=core/inventory/ --group=guatemala --output=database
 ```
 
 
@@ -163,9 +169,11 @@ Options:
   --process TEXT     what type of process for the vrf report [src, dst] [required]
   --help             Show this message and exit.
 
+Note: Remember to execute command into folder './code>'
+
 Example:
-    $ ciberc-ca ping --path=core/inventory/ --group=src,guatemala,escuintla --output=json --name=ReportPingSource --process=src
-    $ ciberc-ca ping --path=core/inventory/ --group=dst,guatemala,escuintla --output=json --name=ReportPingDestinations --process=dst
+    > ciberc-ca ping --path=core/inventory/ --group=src,guatemala,escuintla --output=json --name=ReportPingSource --process=src
+    > ciberc-ca ping --path=core/inventory/ --group=dst,guatemala,escuintla --output=json --name=ReportPingDestinations --process=dst
 ```
 
 ### Ping-Merge command:
@@ -180,8 +188,10 @@ Options:
   --name TEXT      The name of the excel file
   --help           Show this message and exit.
 
+Note: Remember to execute command into folder './code>'
+
 Example:
-    $ ciberc-ca ping-merge --file-src=file_vrfs_source.json --file-dst=file_vrf_destinations.json --output=excel --name=ReporteMigrations
+    > ciberc-ca ping-merge --file-src=file_vrfs_source.json --file-dst=file_vrf_destinations.json --output=excel --name=ReporteMigrations
 
 ```
 
@@ -193,11 +203,11 @@ Description: Return record list for type of command, just if exist data and conn
 Options:
   --command TEXT  Type of command (alive or interfaces)  [required]
 
-
+Note: Remember to execute command into folder './code>'
 
 Example:
-    $ ciberc-ca records ---command=alive
-    $ ciberc-ca records ---command=interfaces
+    > ciberc-ca records ---command=alive
+    > ciberc-ca records ---command=interfaces
 
 ```
 
